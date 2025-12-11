@@ -5,8 +5,8 @@ export interface CreateUserDto {
   name: string;
   email: string;
   password: string;
-  role: 'admin' | 'employee' | 'funcionario';
-  position?: string;
+  role: 'admin' | 'funcionario';
+  // position não existe no backend, será removido antes de enviar
 }
 
 export interface UpdateUserDto extends Partial<CreateUserDto> {
@@ -37,14 +37,31 @@ export function useUsersResource() {
     return response.data.data;
   };
 
-  const create = async (data: CreateUserDto): Promise<User> => {
-    const response = await api.post<BackendResponse<User>>('/api/users', data);
+  const create = async (data: CreateUserDto & { position?: string }): Promise<User> => {
+    // Garante que o role seja 'funcionario' ou 'admin' (backend não aceita 'employee')
+    // Remove campos que não existem no backend (position)
+    const { position, ...backendData } = data;
+    const payload = {
+      ...backendData,
+      role: backendData.role === 'employee' ? 'funcionario' : backendData.role,
+    };
+    const response = await api.post<BackendResponse<User>>('/api/users', payload);
     return response.data.data;
   };
 
-  const update = async (data: UpdateUserDto): Promise<User> => {
-    const { id, ...updateData } = data;
-    const response = await api.put<BackendResponse<User>>(`/api/users/${id}`, updateData);
+  const update = async (data: UpdateUserDto & { position?: string }): Promise<User> => {
+    const { id, position, password, ...updateData } = data;
+    // Garante que o role seja 'funcionario' ou 'admin' (backend não aceita 'employee')
+    // Remove campos que não existem no backend (position)
+    // Só inclui password se foi fornecido
+    const payload: any = {
+      ...updateData,
+      role: updateData.role === 'employee' ? 'funcionario' : updateData.role,
+    };
+    if (password) {
+      payload.password = password;
+    }
+    const response = await api.put<BackendResponse<User>>(`/api/users/${id}`, payload);
     return response.data.data;
   };
 

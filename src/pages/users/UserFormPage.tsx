@@ -14,7 +14,7 @@ const userSchema = z.object({
   name: z.string().min(3, 'Nome deve ter no mínimo 3 caracteres'),
   email: z.string().email('E-mail inválido'),
   password: z.string().min(6, 'Senha deve ter no mínimo 6 caracteres').optional(),
-  role: z.enum(['admin', 'employee']),
+  role: z.enum(['admin', 'funcionario']),
   position: z.string().optional(),
 });
 
@@ -35,7 +35,7 @@ export default function UserFormPage() {
   } = useForm<UserFormData>({
     resolver: zodResolver(userSchema),
     defaultValues: {
-      role: 'employee',
+      role: 'funcionario',
     },
   });
 
@@ -45,11 +45,13 @@ export default function UserFormPage() {
       usersResource.findById(id).then((user) => {
         setValue('name', user.name);
         setValue('email', user.email);
-        setValue('role', user.role);
-        setValue('position', user.position || '');
+        // Garante que o role seja mapeado corretamente (backend usa 'funcionario', frontend também)
+        setValue('role', user.role === 'employee' ? 'funcionario' : user.role);
+        // position não existe no backend, mas mantemos o campo no formulário para uso futuro
+        setValue('position', '');
       });
     }
-  }, [id, setValue]);
+  }, [id, setValue, usersResource]);
 
   const onSubmit = async (data: UserFormData) => {
     setLoading(true);
@@ -129,7 +131,7 @@ export default function UserFormPage() {
                 className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
                 {...register('role')}
               >
-                <option value="employee">Funcionário</option>
+                <option value="funcionario">Funcionário</option>
                 <option value="admin">Administrador</option>
               </select>
             </div>

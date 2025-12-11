@@ -15,10 +15,11 @@ import type { TaskStatus } from '@/interfaces/task.interface';
 
 const taskSchema = z.object({
   title: z.string().min(3, 'Título deve ter no mínimo 3 caracteres'),
-  description: z.string().optional(),
+  description: z.string().min(10, 'Descrição deve ter no mínimo 10 caracteres'),
+  type: z.enum(['landing_page', 'edicao', 'api', 'manutencao', 'urgente']),
   status: z.enum(['todo', 'in_progress', 'completed']),
-  assigned_to: z.string().optional(),
-  due_date: z.string().optional(),
+  assigned_to: z.string().min(1, 'Responsável é obrigatório'),
+  due_date: z.string().min(1, 'Data de vencimento é obrigatória'),
   priority: z.enum(['low', 'medium', 'high']).optional(),
 });
 
@@ -43,6 +44,7 @@ export default function TaskFormPage() {
     defaultValues: {
       status: 'todo',
       priority: 'medium',
+      type: 'edicao',
     },
   });
 
@@ -68,6 +70,7 @@ export default function TaskFormPage() {
       const task = await tasksResource.findById(id!);
       setValue('title', task.title);
       setValue('description', task.description || '');
+      setValue('type', task.type || 'edicao');
       setValue('status', task.status);
       setValue('assigned_to', task.assigned_to || '');
       setValue('due_date', task.due_date || '');
@@ -127,12 +130,33 @@ export default function TaskFormPage() {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="description">Descrição</Label>
+              <Label htmlFor="description">Descrição *</Label>
               <textarea
                 id="description"
                 className="flex min-h-[80px] w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
                 {...register('description')}
               />
+              {errors.description && (
+                <p className="text-sm text-red-600 dark:text-red-400">{errors.description.message}</p>
+              )}
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="type">Tipo *</Label>
+              <select
+                id="type"
+                className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
+                {...register('type')}
+              >
+                <option value="landing_page">Landing Page</option>
+                <option value="edicao">Edição</option>
+                <option value="api">API</option>
+                <option value="manutencao">Manutenção</option>
+                <option value="urgente">Urgente</option>
+              </select>
+              {errors.type && (
+                <p className="text-sm text-red-600 dark:text-red-400">{errors.type.message}</p>
+              )}
             </div>
 
             <div className="space-y-2">
@@ -149,19 +173,22 @@ export default function TaskFormPage() {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="assigned_to">Atribuir a</Label>
+              <Label htmlFor="assigned_to">Responsável *</Label>
               <select
                 id="assigned_to"
                 className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
                 {...register('assigned_to')}
               >
-                <option value="">Nenhum</option>
+                <option value="">Selecione um responsável</option>
                 {users.map((user) => (
                   <option key={user.id} value={user.id}>
                     {user.name} ({user.email})
                   </option>
                 ))}
               </select>
+              {errors.assigned_to && (
+                <p className="text-sm text-red-600 dark:text-red-400">{errors.assigned_to.message}</p>
+              )}
             </div>
 
             <div className="space-y-2">
@@ -178,8 +205,11 @@ export default function TaskFormPage() {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="due_date">Data de Vencimento</Label>
+              <Label htmlFor="due_date">Data de Vencimento *</Label>
               <Input id="due_date" type="date" {...register('due_date')} />
+              {errors.due_date && (
+                <p className="text-sm text-red-600 dark:text-red-400">{errors.due_date.message}</p>
+              )}
             </div>
 
             <div className="flex gap-4">

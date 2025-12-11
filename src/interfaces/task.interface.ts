@@ -1,11 +1,14 @@
 export type TaskStatus = 'todo' | 'in_progress' | 'completed';
 export type BackendTaskStatus = 'pendente' | 'fazendo' | 'concluido';
 
+export type TaskType = 'landing_page' | 'edicao' | 'api' | 'manutencao' | 'urgente';
+
 export interface Task {
   id: string;
   title: string;
   description?: string;
   status: TaskStatus;
+  type?: TaskType;
   assigned_to?: string;
   assigned_user?: {
     id: string;
@@ -26,10 +29,11 @@ export interface Task {
 
 export interface CreateTaskDto {
   title: string;
-  description?: string;
+  description: string;
+  type: TaskType;
   status?: TaskStatus;
-  assigned_to?: string;
-  due_date?: string;
+  assigned_to: string;
+  due_date: string;
   priority?: 'low' | 'medium' | 'high';
 }
 

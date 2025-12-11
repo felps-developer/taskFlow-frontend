@@ -13,6 +13,7 @@ import KanbanPage from '@/pages/kanban/KanbanPage';
 import TaskFormPage from '@/pages/tasks/TaskFormPage';
 import UserFormPage from '@/pages/users/UserFormPage';
 import MetricsPage from '@/pages/metrics/MetricsPage';
+import HistoryPage from '@/pages/history/HistoryPage';
 
 function AppRoutes() {
   return (
@@ -37,6 +38,7 @@ function AppRoutes() {
         <Route path="kanban" element={<KanbanPage />} />
         <Route path="tasks/new" element={<TaskFormPage />} />
         <Route path="tasks/:id/edit" element={<TaskFormPage />} />
+        <Route path="history" element={<HistoryPage />} />
         <Route
           path="users/new"
           element={

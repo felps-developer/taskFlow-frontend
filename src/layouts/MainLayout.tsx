@@ -3,7 +3,7 @@ import { useAuthStore } from '@/stores/auth';
 import { useRoles } from '@/hooks/useRoles';
 import { RoleWrapper } from '@/components/RoleWrapper';
 import { Button } from '@/components/ui/button';
-import { LogOut, LayoutDashboard, Kanban, Users, BarChart3, Menu } from 'lucide-react';
+import { LogOut, LayoutDashboard, Kanban, Users, BarChart3, Menu, History } from 'lucide-react';
 import { useState } from 'react';
 
 export default function MainLayout() {
@@ -69,6 +69,14 @@ export default function MainLayout() {
             >
               <Kanban className="h-5 w-5" />
               <span>Kanban</span>
+            </Link>
+
+            <Link
+              to="/history"
+              className="flex items-center gap-3 px-4 py-3 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+            >
+              <History className="h-5 w-5" />
+              <span>Histórico</span>
             </Link>
 
             <RoleWrapper role="admin">

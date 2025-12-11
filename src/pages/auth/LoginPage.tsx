@@ -23,7 +23,7 @@ export default function LoginPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
-  const { setUser, setToken, setPermissions } = useAuthStore();
+  const { setUser, setToken } = useAuthStore();
   const authResource = useAuthResource();
 
   const {
@@ -44,16 +44,11 @@ export default function LoginPage() {
       setUser(response.user);
       localStorage.setItem('userData', JSON.stringify(response.user));
       
-      // Simular permissões baseadas no role
-      const permissions = response.user.role === 'admin' 
-        ? ['TASKS_LIST', 'TASKS_CREATE', 'TASKS_UPDATE', 'TASKS_DELETE', 'USERS_LIST', 'USERS_CREATE', 'USERS_UPDATE', 'USERS_DELETE', 'DASHBOARD_VIEW', 'METRICS_VIEW']
-        : ['TASKS_LIST', 'TASKS_UPDATE', 'DASHBOARD_VIEW'];
-      
-      setPermissions(permissions.map(key => ({ key: key as any, key_group: key.split('_')[0], name: key })));
-      
       navigate('/dashboard');
     } catch (err: any) {
-      setError(err.response?.data?.message || 'Erro ao fazer login. Verifique suas credenciais.');
+      console.error('Erro no login:', err);
+      const errorMessage = err.response?.data?.message || err.message || 'Erro ao fazer login. Verifique suas credenciais.';
+      setError(errorMessage);
     } finally {
       setLoading(false);
     }

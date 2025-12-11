@@ -1,15 +1,14 @@
 import { Outlet, Link, useNavigate } from 'react-router-dom';
 import { useAuthStore } from '@/stores/auth';
-import { usePermissions } from '@/hooks/usePermissions';
-import { PermissionWrapper } from '@/components/PermissionWrapper';
+import { useRoles } from '@/hooks/useRoles';
+import { RoleWrapper } from '@/components/RoleWrapper';
 import { Button } from '@/components/ui/button';
-import { USER_PERMISSIONS, DASHBOARD_PERMISSIONS } from '@/constants/permissions';
 import { LogOut, LayoutDashboard, Kanban, Users, BarChart3, Menu } from 'lucide-react';
 import { useState } from 'react';
 
 export default function MainLayout() {
   const { user, logout } = useAuthStore();
-  const { isAdmin } = usePermissions();
+  const { isAdmin } = useRoles();
   const navigate = useNavigate();
   const [sidebarOpen, setSidebarOpen] = useState(true);
 
@@ -64,17 +63,15 @@ export default function MainLayout() {
               <span>Dashboard</span>
             </Link>
 
-            <PermissionWrapper permission="TASKS_LIST">
-              <Link
-                to="/kanban"
-                className="flex items-center gap-3 px-4 py-3 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
-              >
-                <Kanban className="h-5 w-5" />
-                <span>Kanban</span>
-              </Link>
-            </PermissionWrapper>
+            <Link
+              to="/kanban"
+              className="flex items-center gap-3 px-4 py-3 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+            >
+              <Kanban className="h-5 w-5" />
+              <span>Kanban</span>
+            </Link>
 
-            <PermissionWrapper permission={USER_PERMISSIONS.CREATE}>
+            <RoleWrapper role="admin">
               <Link
                 to="/users/new"
                 className="flex items-center gap-3 px-4 py-3 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
@@ -82,9 +79,9 @@ export default function MainLayout() {
                 <Users className="h-5 w-5" />
                 <span>Cadastrar Funcionário</span>
               </Link>
-            </PermissionWrapper>
+            </RoleWrapper>
 
-            <PermissionWrapper permission={DASHBOARD_PERMISSIONS.METRICS}>
+            <RoleWrapper role="admin">
               <Link
                 to="/metrics"
                 className="flex items-center gap-3 px-4 py-3 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
@@ -92,7 +89,7 @@ export default function MainLayout() {
                 <BarChart3 className="h-5 w-5" />
                 <span>Métricas</span>
               </Link>
-            </PermissionWrapper>
+            </RoleWrapper>
           </nav>
         </aside>
 

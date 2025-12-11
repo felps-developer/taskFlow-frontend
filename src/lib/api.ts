@@ -1,6 +1,10 @@
 import axios, { AxiosError, AxiosInstance, InternalAxiosRequestConfig } from 'axios';
 
-const API_URI = import.meta.env.VITE_API_URI || 'http://localhost:3001';
+// Em desenvolvimento, usa o proxy do Vite (/api)
+// Em produção, usa a URL completa do backend
+const API_URI = import.meta.env.PROD
+  ? import.meta.env.VITE_API_URI || 'http://localhost:3000'
+  : '';
 
 const api: AxiosInstance = axios.create({
   baseURL: API_URI,

@@ -5,8 +5,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button';
 import { Plus } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import { PermissionWrapper } from '@/components/PermissionWrapper';
-import { TASK_PERMISSIONS } from '@/constants/permissions';
+import { RoleWrapper } from '@/components/RoleWrapper';
 import type { Task } from '@/interfaces/task.interface';
 
 export default function DashboardPage() {
@@ -54,12 +53,10 @@ export default function DashboardPage() {
             Visão geral das tarefas e atividades
           </p>
         </div>
-        <PermissionWrapper permission={TASK_PERMISSIONS.CREATE}>
-          <Button onClick={() => navigate('/tasks/new')}>
-            <Plus className="h-4 w-4 mr-2" />
-            Nova Tarefa
-          </Button>
-        </PermissionWrapper>
+        <Button onClick={() => navigate('/tasks/new')}>
+          <Plus className="h-4 w-4 mr-2" />
+          Nova Tarefa
+        </Button>
       </div>
 
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
@@ -110,11 +107,11 @@ export default function DashboardPage() {
             <Button variant="outline" onClick={() => navigate('/kanban')}>
               Ver Kanban
             </Button>
-            <PermissionWrapper permission="METRICS_VIEW">
+            <RoleWrapper role="admin">
               <Button variant="outline" onClick={() => navigate('/metrics')}>
                 Ver Métricas
               </Button>
-            </PermissionWrapper>
+            </RoleWrapper>
           </div>
         </CardContent>
       </Card>

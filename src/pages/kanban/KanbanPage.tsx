@@ -2,8 +2,7 @@ import { useEffect, useState } from 'react';
 import { useTasksResource } from '@/hooks/api/useTasksResource';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { PermissionWrapper } from '@/components/PermissionWrapper';
-import { TASK_PERMISSIONS } from '@/constants/permissions';
+import { RoleWrapper } from '@/components/RoleWrapper';
 import { Plus, Edit, Trash2 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import type { Task, TaskStatus } from '@/interfaces/task.interface';
@@ -74,12 +73,10 @@ export default function KanbanPage() {
             Organize suas tarefas em colunas
           </p>
         </div>
-        <PermissionWrapper permission={TASK_PERMISSIONS.CREATE}>
-          <Button onClick={() => navigate('/tasks/new')}>
-            <Plus className="h-4 w-4 mr-2" />
-            Nova Tarefa
-          </Button>
-        </PermissionWrapper>
+        <Button onClick={() => navigate('/tasks/new')}>
+          <Plus className="h-4 w-4 mr-2" />
+          Nova Tarefa
+        </Button>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -113,16 +110,14 @@ export default function KanbanPage() {
                         </p>
                       )}
                       <div className="flex gap-2">
-                        <PermissionWrapper permission={TASK_PERMISSIONS.UPDATE}>
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            onClick={() => navigate(`/tasks/${task.id}/edit`)}
-                          >
-                            <Edit className="h-4 w-4" />
-                          </Button>
-                        </PermissionWrapper>
-                        <PermissionWrapper permission={TASK_PERMISSIONS.DELETE}>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => navigate(`/tasks/${task.id}/edit`)}
+                        >
+                          <Edit className="h-4 w-4" />
+                        </Button>
+                        <RoleWrapper role="admin">
                           <Button
                             variant="ghost"
                             size="sm"
@@ -130,7 +125,7 @@ export default function KanbanPage() {
                           >
                             <Trash2 className="h-4 w-4 text-red-600" />
                           </Button>
-                        </PermissionWrapper>
+                        </RoleWrapper>
                       </div>
                     </CardContent>
                   </Card>

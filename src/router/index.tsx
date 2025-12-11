@@ -1,7 +1,6 @@
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { AuthGuard } from './guards/AuthGuard';
-import { PermissionGuard } from './guards/PermissionGuard';
-import { DASHBOARD_PERMISSIONS, USER_PERMISSIONS } from '@/constants/permissions';
+import { RoleGuard } from './guards/RoleGuard';
 
 // Layouts
 import AuthLayout from '@/layouts/AuthLayout';
@@ -33,60 +32,25 @@ function AppRoutes() {
           </AuthGuard>
         }
       >
-        <Route
-          index
-          element={
-            <PermissionGuard permission={DASHBOARD_PERMISSIONS.VIEW}>
-              <Navigate to="/dashboard" replace />
-            </PermissionGuard>
-          }
-        />
-        <Route
-          path="dashboard"
-          element={
-            <PermissionGuard permission={DASHBOARD_PERMISSIONS.VIEW}>
-              <DashboardPage />
-            </PermissionGuard>
-          }
-        />
-        <Route
-          path="kanban"
-          element={
-            <PermissionGuard permission="TASKS_LIST">
-              <KanbanPage />
-            </PermissionGuard>
-          }
-        />
-        <Route
-          path="tasks/new"
-          element={
-            <PermissionGuard permission="TASKS_CREATE">
-              <TaskFormPage />
-            </PermissionGuard>
-          }
-        />
-        <Route
-          path="tasks/:id/edit"
-          element={
-            <PermissionGuard permission="TASKS_UPDATE">
-              <TaskFormPage />
-            </PermissionGuard>
-          }
-        />
+        <Route index element={<Navigate to="/dashboard" replace />} />
+        <Route path="dashboard" element={<DashboardPage />} />
+        <Route path="kanban" element={<KanbanPage />} />
+        <Route path="tasks/new" element={<TaskFormPage />} />
+        <Route path="tasks/:id/edit" element={<TaskFormPage />} />
         <Route
           path="users/new"
           element={
-            <PermissionGuard permission={USER_PERMISSIONS.CREATE}>
+            <RoleGuard role="admin">
               <UserFormPage />
-            </PermissionGuard>
+            </RoleGuard>
           }
         />
         <Route
           path="metrics"
           element={
-            <PermissionGuard permission={DASHBOARD_PERMISSIONS.METRICS}>
+            <RoleGuard role="admin">
               <MetricsPage />
-            </PermissionGuard>
+            </RoleGuard>
           }
         />
       </Route>

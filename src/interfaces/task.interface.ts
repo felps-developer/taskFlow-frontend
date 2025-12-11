@@ -1,4 +1,5 @@
 export type TaskStatus = 'todo' | 'in_progress' | 'completed';
+export type BackendTaskStatus = 'pendente' | 'fazendo' | 'concluido';
 
 export interface Task {
   id: string;
